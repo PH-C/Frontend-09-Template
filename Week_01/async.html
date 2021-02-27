@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <style>
+    .signal {
+      width: 100px;
+      height: 100px;
+      display: inline-block;
+      border-radius: 50%;
+      margin: 50px;
+      background-color: gray;
+    }
+
+    .signal.light.red {
+      background-color: red;
+    }
+
+    .signal.light.green {
+      background-color: green;
+    }
+
+    .signal.light.yellow {
+      background-color: yellow;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="signal green"></div>
+  <div class="signal yellow"></div>
+  <div class="signal red"></div>
+  <button id="next">next</button>
+</body>
+<script>
+  function changeLightColor(color) {
+    var signals = document.getElementsByClassName("signal");
+    Array.from(signals).forEach((element) => {
+      element.classList.remove("light");
+      document.getElementsByClassName(color)[0].classList.add("light");
+    });
+  }
+
+  function sleep(duration) {
+    return new Promise((resolve, reject) => {
+      setTimeout(resolve, duration);
+    });
+  }
+
+  function happen() {
+    return new Promise((resolve, reject) => {
+      document.getElementById("next").addEventListener("click", resolve, { once: true });
+    });
+  }
+
+  async function go() {
+    while (true) {
+      changeLightColor("green");
+      await sleep(1000);
+      changeLightColor("yellow");
+      await sleep(2000);
+      changeLightColor("red");
+      await sleep(3000);
+    }
+  }
+</script>
+
+</html>
