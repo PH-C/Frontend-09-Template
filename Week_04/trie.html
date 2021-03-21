@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <script>
+    let $ = Symbol('$') // 如果字符串存在'$'符会导致冲突，故这里用Symbol('$')生成不同的$属性
+    class Trie {
+      constructor(){
+        this.root = Object.create(null) // 创建一个纯对象{}(无__proto__原型链)
+      }
+      insert(word){
+        let node = this.root
+        for (let c of word){
+          if (!node[c]){
+            node[c] = Object.create(null)
+          }
+          node = node[c] // 存在子树则查找下一层
+        }
+        if (!($ in node)){
+          node[$] = 0  // 标记字符串结尾，并记录字符串出现的次数
+        }
+        node[$]++
+      }
+      most(){
+        let max = 0
+        let maxWord = null
+        let visit = (node, word) => {
+          if(node[$] && node[$] > max) {
+            max = node[$]
+            maxWord = word;
+          }
+          for(let p in node) {
+            visit(node[p], word + p)
+          }
+        }
+        visit(this.root, '')
+        console.log(maxWord, max)
+      }
+    }
+
+    function randomWord(length){
+      var s = ''
+      for (let i = 0; i < length; i++){
+        s += String.fromCharCode(Math.random()*26 + 'a'.charCodeAt(0)) 
+        // 获取a的编码值 获取26个字母中第一个a的Unicode编码值，
+        // 然后随机取26之内随机任意数字h和a的编码值相加即可随机得到一个26个字母中任意一个字母的Unicode编码值，最后将其转换成字符
+      }
+      return s
+    }
+
+    let trie = new Trie()
+
+    for (let i = 0;i < 100000; i++){
+      trie.insert(randomWord(4))
+    }
+
+  </script>
+</body>
+</html>

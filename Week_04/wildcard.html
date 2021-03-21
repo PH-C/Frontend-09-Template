@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function find(source, pattern){
+      let starCount = 0;//“*”的数量
+      for(let i = 0; i < pattern.length; i++){
+        if (pattern[i] === "*"){
+          starCount ++
+        }
+      }
+      //没有*号的情况
+      if(starCount === 0){
+        for (let i = 0; i < pattern.length; i++){
+          if (pattern[i] !== source[i] && pattern[i] !== "?"){
+            return false 
+          }
+        }
+        return 
+      }
+      // 处理第一个“*”之前的部分
+      let i = 0
+      let lastIndex = 0
+
+      for (i = 0; pattern[i] !== "*";i++){
+        if (pattern[i] !== source[i] && pattern[i] !== "?"){
+            return false 
+        }
+      }
+
+      lastIndex = i
+
+      for (let p = 0; p <starCount - 1; p++){
+        i++
+        let subPattern = ""
+        while(pattern[i] !== "*"){
+          subPattern += pattern[i]
+          i++
+        }
+
+        let reg = new RegExp(subPattern.replace(/\?/g, "[\\s\\S]"), "g")
+        reg.lastIndex = lastIndex
+
+        if(!reg.exec(source)){
+          return false
+        }
+
+        lastIndex = reg.lastIndex // 从之前匹配的文本最后一个字符的下一个位置继续
+      }
+
+      for(let j = 0; j <= source.length - lastIndex && pattern[pattern.length - j] !== "*"; j++){
+        if (pattern[pattern.length - j] !== source[source.length - j]
+            && pattern[pattern.length - j] !== "?"){
+            return false 
+        }
+      }
+      return true
+
+    }
+    //find("abcabcabxaac", "a*b*bx*c")
+    //find("abcabcabxaac", "a*b?*b?x*c")
+  </script>
+</body>
+</html>
