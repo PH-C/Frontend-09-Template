@@ -19,16 +19,13 @@ function kmp(source, pattern) {
     console.log(nextArr);
   }
   {
-    let i = 1;
+    let i = 0;
     let j = 0;
     while (i < source.length) {
-      if (j === pattern.length - 1) {
-        return true;
-      }
+     
       // 分支，处理前后缀不相同和前后缀相同这两个情况
       if (source[i] === pattern[j]) {
         ++j, ++i;
-        nextArr[i - 1] = j;
       } else {
         if (j > 0) {
           j = nextArr[j - 1]; //跳转到pattern位置
@@ -36,10 +33,15 @@ function kmp(source, pattern) {
           ++i;
         }
       }
+
+      if (j === pattern.length) {
+        return true;
+      }
     }
     return false;
   }
 }
 console.log(kmp("aabaabaaf", "aabaafa"));
+console.log(kmp("aabaabaaf", "aabaa"));
 
 //计算模式串最长相等前后缀
