@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let callbacks = []
+
+    let object = {
+      a: 1,
+      b: 2
+    }
+
+    let po = reactive(object)
+  
+    //监听对象事件
+    effect(()=>{
+      console.log(po.a)
+    })
+
+    function effect(callback){
+      callbacks.push(callback)
+    }
+
+    function reactive(object) {
+      return new Proxy(object, {
+        set(obj, prop, val){
+          obj[prop] = val;
+          for(let callback of callbacks) {
+            callback()
+          }
+          console.log(obj, prop, val)
+          return obj[prop]
+        },
+        get(obj, prop){
+          console.log(obj, prop)
+          return obj[prop]
+        }
+      })
+    }
+
+
+  </script>
+</body>
+</html>
