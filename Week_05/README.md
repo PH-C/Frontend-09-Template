@@ -20,3 +20,8 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects
 #### 模仿reactive实现原理
 在vue3.0中我们把vue原来的能力拆了一下包、产生了一个叫reactive这样的一个包，这个reactive是适用Proxy实现的，这里来模仿reactive的实现。
 通过effect传入一个函数，就可以监听事件
+
+## Range 
+https://github.com/xushuxin/Frontend-09-Template/tree/main/Week_05
+https://github.com/Raoting1997/Frontend-09-Template/tree/main/Week_05
+Range: https://developer.mozilla.org/zh-CN/docs/Web/API/Range
