@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-3.1.0/build/g6.js"></script>
+    <title>Realm 内置对象</title>
+  </head>
+  <body>
+    <h1>Table 8: Well-Known Intrinsic Objects</h1>
+    <a href="https://262.ecma-international.org/#table-7">Click to ECMAScript 2020 Language Specification - Table 8: Well-Known Intrinsic Objects</a>
+    <div id="container"></div>
+    <script>
+      let intrinsicObjects = [
+        "%Array%",
+        "%ArrayBuffer%",
+        "%ArrayBufferPrototype%",
+        "%ArrayIteratorPrototype%",
+        "%ArrayPrototype%",
+        "%ArrayProto_entries%",
+        "%ArrayProto_forEach%",
+        "%ArrayProto_keys%",
+        "%ArrayProto_values%",
+        "%AsyncFromSyncIteratorPrototype%",
+        "%AsyncFunction%",
+        "%AsyncFunctionPrototype%",
+        "%AsyncGenerator%",
+        "%AsyncGeneratorFunction%",
+        "%AsyncGeneratorPrototype%",
+        "%AsyncIteratorPrototype%",
+        "%Atomics%",
+        "%BigInt%",
+        "%BigInt64Array%",
+        "%BigUint64Array%",
+        "%Boolean%",
+        "%BooleanPrototype%",
+        "%DataView%",
+        "%DataViewPrototype%",
+        "%Date%",
+        "%DatePrototype%",
+        "%decodeURI%",
+        "%decodeURIComponent%",
+        "%encodeURI%",
+        "%encodeURIComponent%",
+        "%Error%",
+        "%ErrorPrototype%",
+        "%eval%",
+        "%EvalError%",
+        "%EvalErrorPrototype%",
+        "%Float32Array%",
+        "%Float32ArrayPrototype%",
+        "%Float64Array%",
+        "%Float64ArrayPrototype%",
+        "%ForInIteratorPrototype%",
+        "%Function%",
+        "%FunctionPrototype%",
+        "%Generator%",
+        "%GeneratorFunction%",
+        "%GeneratorPrototype%",
+        "%Int8Array%",
+        "%Int8ArrayPrototype%",
+        "%Int16Array%",
+        "%Int16ArrayPrototype%",
+        "%Int32Array%",
+        "%Int32ArrayPrototype%",
+        "%isFinite%",
+        "%isNaN%",
+        "%IteratorPrototype%",
+        "%JSON%",
+        "%JSONParse%",
+        "%JSONStringify%",
+        "%Map%",
+        "%MapIteratorPrototype%",
+        "%MapPrototype%",
+        "%Math%",
+        "%Number%",
+        "%NumberPrototype%",
+        "%Object%",
+        "%ObjectPrototype%",
+        "%ObjProto_toString%",
+        "%ObjProto_valueOf%",
+        "%parseFloat%",
+        "%parseInt%",
+        '%Promise%',
+        '%PromisePrototype%',
+        '%PromiseProto_then%',
+        '%Promise_all%',
+        '%Promise_reject%',
+        '%Promise_resolve%',
+        '%Proxy%',
+        '%RangeError%',
+        '%RangeErrorPrototype%',
+        '%ReferenceError%',
+        '%ReferenceErrorPrototype%',
+        '%Reflect%',
+        '%RegExp%',
+        '%RegExpPrototype%',
+        '%RegExpStringIteratorPrototype%',
+        '%Set%',
+        '%SetIteratorPrototype%',
+        '%SetPrototype%',
+        '%SharedArrayBuffer%',
+        '%SharedArrayBufferPrototype%',
+        '%String%',
+        '%StringIteratorPrototype%',
+        '%StringPrototype%',
+        '%Symbol%',
+        '%SymbolPrototype%',
+        '%SyntaxError%',
+        '%SyntaxErrorPrototype%',
+        '%ThrowTypeError%',
+        '%TypedArray%',
+        '%TypedArrayPrototype%',
+        '%TypeError%',
+        '%TypeErrorPrototype%',
+        '%Uint8Array%',
+        '%Uint8ArrayPrototype%',
+        '%Uint8ClampedArray%',
+        '%Uint8ClampedArrayPrototype%',
+        '%Uint16Array%',
+        '%Uint16ArrayPrototype%',
+        '%Uint32Array%',
+        '%Uint32ArrayPrototype%',
+        '%URIError%',
+        '%URIErrorPrototype%',
+        '%WeakMap%',
+        '%WeakMapPrototype%',
+        '%WeakSet%',
+        '%WeakSetPrototype%',
+      ];
+
+      let y = 0;
+      let root = {};
+
+      const yOffSet = 200;
+
+      let nodes = intrinsicObjects.map((item) => ({
+        id: item,
+        label: item,
+        x: 500,
+        y: (y = y + yOffSet),
+        shape: "circle",
+        size: 80,
+      }));
+
+      root = {
+        id: "Realm",
+        label: "Realm",
+        size: 60,
+        x: 100,
+        y: nodes[nodes.length-1].y / 2,
+      };
+
+      nodes.unshift(root);
+
+      let edges = intrinsicObjects.map((item) => ({
+        source: "Realm",
+        target: item,
+      }));
+
+      const data = {
+        nodes,
+        edges
+      };
+
+      const graph = new G6.Graph({
+        container: "container",
+        width: 1600,
+        height: nodes[nodes.length-1].y + yOffSet ,
+      });
+
+      graph.data(data);
+      graph.render();
+    </script>
+  </body>
+</html>
