@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function match(string) {
+      let state = start;
+
+      for (let letter of string) {
+        state = state(letter);
+      }
+
+      return state === end;
+    }
+
+    function start(letter) {
+      if (letter === 'a') return matchedA;
+      return start;
+    }
+
+    function end(letter) {
+      return end;
+    }
+
+    function matchedA(letter) {
+      if (letter === 'b') return matchedB;
+      return start(letter);
+    }
+
+    function matchedB(letter) {
+      if (letter === 'a') return matchedA2;
+      return start(letter);
+    }
+
+    function matchedA2(letter) {
+      if (letter === 'b') return matchedB2;
+      return start(letter);
+    }
+
+    function matchedB2(letter) {
+      if (letter === 'a') return matchedA3;
+      return start(letter);
+    }
+
+    function matchedA3(letter) {
+      if (letter === 'b') return matchedB3;
+      return start(letter);
+    }
+
+    function matchedB3(letter) {
+      if (letter === 'x') return end;
+      return matchedB2(letter);
+    }
+
+    console.log(match('ababababx', 'abababx'))
+  </script>
+</body>
+</html>
