@@ -267,9 +267,20 @@ class Request {
     return `${this.method} ${this.path} HTTP/1.1\r
       ${Object.keys(this.headers)
         .map(key => `${key}: ${this.headers[key]}`)
-        .join('\r\n')}\r\r
-      ${this.bodyText}`;
+        .join('\r\n')}\r
+\r
+${this.bodyText}`;
   }
+
+//   toString() {
+//     // 注意换行不能多加空格不然会出现下面的400错误
+//     //     HTTP/1.1 400 Bad Request
+//     // Connection: close
+//     return `${this.method} ${this.path} HTTP/1.1\r
+// ${Object.keys(this.headers).map(key => `${key}: ${this.headers[key]}`).join('\r\n')}\r
+// \r
+// ${this.bodyText}`
+//   }
 }
 
 /**
@@ -279,13 +290,13 @@ class Request {
   let request = new Request({
     method: 'POST',
     host: '127.0.0.1',
-    port: '8080',
+    port: '8088',
     path: '/',
     headers: {
       ['X-Foo2']: 'custom',
     },
     body: {
-      name: 'tridiamond',
+      name: 'PH',
     },
   });
 
