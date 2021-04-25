@@ -11,7 +11,8 @@
 - parser 接收 HTML 文本作为参数，返回一棵 DOM 树
 
 ### 1.2 用有效状态机 (FSM) 实现 HTML的分析
-> HTML 标准里面已经把整个状态机中的状态都设计好了，我们直接就看HTML标准中给我们设计好的状态：https://html.spec.whatwg.org/multipage/，我们直接翻到 “Tokenization” 查看列出的状态，这里就是所有 HTML 的词法
+> HTML 标准里面已经把整个状态机中的状态都设计好了，我们直接就看HTML标准中给我们设计好的状态：https://html.spec.whatwg.org/multipage/
+我们直接翻到 “Tokenization” 查看列出的状态，这里就是所有 HTML 的词法
 - 我们用 FSM 来实现 HTML 的分析
 - 在 HTML 标准中，已经规定了 HTML 的状态
 - 我们的浏览器只挑选其中一部分状态，完成一个最简版本
