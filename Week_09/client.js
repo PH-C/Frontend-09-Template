@@ -1,5 +1,5 @@
 const net = require('net')
-const parser = require('./parser.js');
+const parser = require('./parserFull.js');
 /**
  * Response 解析器
  */

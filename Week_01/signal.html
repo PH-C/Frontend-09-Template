@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .signal{
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 1px solid #333;
+      background-color: grey;
+    }
+    .signal.light-up.red{
+      background-color: red;
+    }
+    .signal.light-up.yellow{
+      background-color: yellow;
+    }
+    .signal.light-up.green{
+      background-color: green;
+    }
+  </style>
+</head>
+<body>
+  <div class="signal light-up red"></div>
+  <div class="signal yellow" ></div>
+  <div class="signal green"></div>
+</body>
+<script>
+  function changeLightColor(color){
+    const signals = Array.from(document.querySelectorAll('.signal'))
+    signals.forEach(signal=>{
+      signal.classList.remove('light-up')
+    })
+    document.getElementsByClassName(color)[0].classList.add('light-up')
+  }
+
+  function sleep(duration){
+    return new Promise((resolve, reject)=>{
+      setTimeout(resolve, duration)
+    })
+  }
+
+  async function signalRun(){
+    while(true){
+      changeLightColor('red')
+      await sleep(2000)
+      changeLightColor('yellow')
+      await sleep(1000)
+      changeLightColor('green')
+      await sleep(3000)
+    }
+  }
+</script>
+</html>
