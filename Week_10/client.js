@@ -197,12 +197,12 @@ void async function() {
             ["X-Foo2"]: "customed"
         },
         body: {
-            name: "Evan"
+            name: "PH"
         }
     });
     let response = await request.send();
     
     // 这里做了一些简化，直接处理所有 body，实际应该异步分段处理
     let dom = parser.parseHTML(response.body);
-    console.log("dom", dom)
+    console.log("dom", JSON.stringify(dom, null, "    "))
 }();

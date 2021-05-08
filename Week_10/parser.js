@@ -143,6 +143,7 @@ function emit(token) {
 
     // 元素构建好之后直接开始 CSS 计算
     computeCSS(element);
+    layout(element)
 
     top.children.push(element);
     element.parent = top;
