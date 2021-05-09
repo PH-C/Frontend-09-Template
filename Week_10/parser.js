@@ -11,6 +11,35 @@ let currentTextNode = null;
 let rules = [];
 let stack = [{ type: 'document', children: [] }];
 
+
+function addCSSRule(text) {
+  var ast = css.parse(text);
+  console.log(JSON.stringify(ast, null, '    '));
+  rules.push(...ast.stylesheet.rules);
+}
+
+function match(element, selector) {
+  if (!selector || !element.attributes) {
+    return false;
+  }
+  if (selector.charAt(0) == "#") {
+    let attr = element.attributes.filter(attr => attr.name === "id")[0];
+    if (attr && attr.value === selector.replace("#", "")) {
+      return true;
+    } 
+  } else if (selector.charAt(0) == ".") {
+    let attr = element.attributes.filter(attr => attr.name === "class")[0];
+    if (attr && attr.value === selector.replace(".", "")) {
+      return true;
+    }
+  } else {
+    if (element.tagName === selector) {
+      return true;
+    }
+  }
+  // return false;
+}
+
 function specifity(selector) {
   var p = [0, 0, 0, 0];
   let selectorParts = selector.split(" ");
@@ -39,28 +68,6 @@ function compare(sp1, sp2) {
   return sp1[3] - sp2[3];
 }
 
-function match(element, selector) {
-  if (!selector || !element.attributes) {
-    return false;
-  }
-  if (selector.charAt(0) == "#") {
-    let attr = element.attributes.filter(attr => attr.name === "id")[0];
-    if (attr && attr.value === selector.replace("#", "")) {
-      return true;
-    } 
-  } else if (selector.charAt(0) == ".") {
-    let attr = element.attributes.filter(attr => attr.name === "class")[0];
-    if (attr && attr.value === selector.replace(".","")) {
-      return true;
-    }
-  } else {
-    if (element.tagName === selector) {
-      return true;
-    }
-  }
-  return false;
-}
-
 function computeCSS(element) {
   var elements = stack.slice().reverse();
   if (!element.computedStyle) {
@@ -84,7 +91,7 @@ function computeCSS(element) {
       matched = true;
     }
     if (matched) {
-      if (matched) console.log('Element', element, 'matched rule', rule);
+      // if (matched) console.log('Element', element, 'matched rule', rule);
       // let computedStyle = element.computedStyle;
       // for (let declaration of rule.declarations) {
       //   if (!computedStyle[declaration.property]) computedStyle[declaration.property] = {};
@@ -103,8 +110,11 @@ function computeCSS(element) {
           computedStyle[declaration.property].specifity = sp; // 给css属性添加优先级四元组
 
         } else if (compare(computedStyle[declaration.property].specifity, sp) < 0) {//如果当前属性在另外一个组合选择器中存在，那就比较优先级，优先级高的覆盖低的属性值
-          computedStyle[declaration.property].value = declaration.value;
-          computedStyle[declaration.property].specifity = sp;
+          // computedStyle[declaration.property].value = declaration.value;
+          // computedStyle[declaration.property].specifity = sp;
+          for(var k = 0; k < 4; k++){
+            computedStyle[declaration.property][declaration.value][k] += sp[k];
+          }
         }
       }
       console.log('Element', element, 'computedStyle', computedStyle);
@@ -114,15 +124,11 @@ function computeCSS(element) {
   console.log('compute CSS for Element', element);
 }
 
-function addCSSRule(text) {
-  var ast = css.parse(text);
-  console.log(JSON.stringify(ast, null, '    '));
-  rules.push(...ast.stylesheet.rules);
-}
 
 function emit(token) {
   console.log(token);
   let top = stack[stack.length - 1];
+
   if (token.type === 'startTag') {
     let element = {
       type: "element",
@@ -143,10 +149,9 @@ function emit(token) {
 
     // 元素构建好之后直接开始 CSS 计算
     computeCSS(element);
-    layout(element)
 
     top.children.push(element);
-    element.parent = top;
+    // element.parent = top;
     if (!token.isSelfClosing) {
       stack.push(element);
     }
@@ -160,8 +165,10 @@ function emit(token) {
         addCSSRule(top.children[0].content);
       }
       layout(top)
+
       stack.pop();
     }
+    
     currentTextNode = null;
   } else if (token.type === 'text') {
     if (currentTextNode === null) {
@@ -205,24 +212,11 @@ function tagOpen(c) {
     };
     return tagName(c);
   } else {
+    emit({
+      type: "text",
+      content: c
+    })
     return;
-  }
-}
-
-function endTagOpen(c) {
-  if (c.match(/^[a-zA-Z]$/)) {
-    // 如果是字母就是标签名
-    currentToken = {
-      type: "endTag",
-      tagName: "",
-    };
-    return tagName(c);
-  } else if (c === ">") {
-    // 如果直接是 `>` 就报错
-  } else if (c === EOF) {
-    // 报错结束标签不合法
-  } else {
-
   }
 }
 
@@ -262,28 +256,6 @@ function beforeAttributeName(c) {
   }
 }
 
-function afterAttributeName(c) {
-  if (c.match(/^[\t\n\f ]$/)) {
-    return afterAttributeName;
-  } else if (c == "/") {
-    return selfClosingStartTag;
-  } else if (c == "=") {
-    return beforeAttributeValue;
-  } else if (c == ">") {
-    currentToken[currentAttribute.name] = currentAttribute.value;
-    emit(currentToken);
-    return data; 
-  } else if (c == EOF) {
-    // 
-  } else {
-    currentToken[currentAttribute.name] = currentAttribute.value;
-    currentAttribute = {
-      name: "",
-      value: ""
-    };
-    return attributeName(c);
-  }
-}
 
 function attributeName(c) {
   if (c.match(/^[\t\n\f ]$/) || c === "/" || c === ">" || c === EOF) {
@@ -305,10 +277,11 @@ function beforeAttributeValue(c) {
     return beforeAttributeValue;
   } else if (c == "\"") {
     return doubleQuotedAttributeValue;
-  } else if (c == "'") {
+  } else if (c == "\'") {
     return singleQuotedAttributeValue;
   } else if (c == ">") {
    // 
+    return data
   } else {
     return unquotedAttributeValue(c);
   }
@@ -391,6 +364,46 @@ function selfClosingStartTag(c) {
     // 报错
   } else {
     // 报错
+  }
+}
+
+function endTagOpen(c) {
+  if (c.match(/^[a-zA-Z]$/)) {
+    // 如果是字母就是标签名
+    currentToken = {
+      type: "endTag",
+      tagName: "",
+    };
+    return tagName(c);
+  } else if (c === ">") {
+    // 如果直接是 `>` 就报错
+  } else if (c === EOF) {
+    // 报错结束标签不合法
+  } else {
+    // 
+  }
+}
+
+function afterAttributeName(c) {
+  if (c.match(/^[\t\n\f ]$/)) {
+    return afterAttributeName;
+  } else if (c == "/") {
+    return selfClosingStartTag;
+  } else if (c == "=") {
+    return beforeAttributeValue;
+  } else if (c == ">") {
+    currentToken[currentAttribute.name] = currentAttribute.value;
+    emit(currentToken);
+    return data; 
+  } else if (c == EOF) {
+    // 
+  } else {
+    currentToken[currentAttribute.name] = currentAttribute.value;
+    currentAttribute = {
+      name: "",
+      value: ""
+    };
+    return attributeName(c);
   }
 }
 

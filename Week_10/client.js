@@ -1,5 +1,7 @@
 const net = require("net");
-const parser = require("./parser.js")
+const parser = require("./parser.js");
+const render = require('./render.js');
+const images = require('images');
 
 class Request {
     constructor(options) {
@@ -204,5 +206,12 @@ void async function() {
     
     // 这里做了一些简化，直接处理所有 body，实际应该异步分段处理
     let dom = parser.parseHTML(response.body);
-    console.log("dom", JSON.stringify(dom, null, "    "))
+    console.log("dom", dom)
+
+    //渲染
+    let viewport = images(800,600)
+
+    render(viewport,dom);
+
+    viewport.save('viewport.jpg')
 }();
