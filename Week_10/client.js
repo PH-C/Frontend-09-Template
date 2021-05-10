@@ -215,7 +215,7 @@ void (async function () {
 
   // 这里做了一些简化，直接处理所有 body，实际应该异步分段处理
   let dom = parser.parseHTML(response.body);
-  console.log("dom", dom);
+  console.log("dom", JSON.stringify(dom, null, '    '));
 
   //渲染
   let viewport = images(800, 600);
