@@ -8,11 +8,13 @@ http
         console.error(err);
       })
       .on('data', chunk => {
-        body.push(chunk);
+        body.push(chunk.toString());
       })
       .on('end', () => {
-        body = Buffer.concat(body).toString();
+        body = body.join("")
         console.log('body', body);
+        response.setHeader('Content-Type', 'text/html');
+        response.setHeader('X-FOO', 'bar');
         response.writeHead(200, { 'Content-Type': 'text/html' });
         response.end(`<html maaa=a >
         <head>

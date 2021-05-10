@@ -217,6 +217,8 @@ function endTagOpen(c) {
     // 如果直接是 `>` 就报错
   } else if (c === EOF) {
     // 报错结束标签不合法
+  } else {
+
   }
 }
 
@@ -233,6 +235,7 @@ function tagName(c) {
     emit(currentToken);
     return data;
   } else {
+    currentToken.tagName += c;
     return tagName;
   }
 }
@@ -245,7 +248,7 @@ function beforeAttributeName(c) {
     // 如果是 `>` 就是开始标签结束
     return afterAttributeName(c);
   } else if (c === "=") {
-    return beforeAttributeName;
+    // return beforeAttributeName;
   } else {
     currentAttribute = {
       name: "",
@@ -394,4 +397,5 @@ module.exports.parseHTML = function parseHTML(html) {
     state = state(c);
   }
   state = state(EOF);
+  return stack[0]
 };
