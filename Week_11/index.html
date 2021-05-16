@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div>
+    <b>
+      <div class="class classA" id="id">content</div>
+    </b>
+  </div>
+
+  <script>
+    function matchSelectors(selector, element){
+
+    }
+    function match(selector, element) {
+      console.log('selector', selector)
+      console.log('element', element)
+      let curElement = element;
+      let matched = 1;
+      let selectors = selector.split(' ').reverse();
+      while(curElement.parentElement && matched < selectors.length){
+        curElement = curElement.parentElement;
+        if (matchSelectors(selectors[matched], curElement)) matched++;
+      }
+    }
+    if (match!==selectors.length){
+      return false
+    } else {
+      return true
+    }
+    let matchResult = match('div #id.class', document.getElementById('id'));
+   
+    console.log('matchResult', matchResult);
+
+  </script>
+</body>
+</html>
