@@ -1,6 +1,6 @@
 # 重学CSS学习笔记
-## 1 CSS 语法的研究
-### 1.1 CSS 2.1 语法标准
+## 1.1 CSS 语法的研究
+### 1.1.1 CSS 2.1 语法标准
 - https://www.w3.org/TR/CSS21/grammar.html#q25.0
 - https://www.w3.org/TR/css-syntax-3
   
@@ -10,7 +10,7 @@
 - | —— 单竖线代表 “或” 的意思
 - * —— 星号代表 0 个或 多个
 
-### 1.2 CSS 总体结构
+### 1.1.2 CSS 总体结构
 - @charset 
 - @import
 - rules —— 多个规则，这里面的规则没有顺序要求
