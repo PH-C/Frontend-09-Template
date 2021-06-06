@@ -29,7 +29,8 @@
 - Children —— 子组件 
   - 组件形成树形结构的必要条件
 ### 1.2 组件 Component
-![avatar](./1.jpg)
+![avatar](https://github.com/PH-C/Frontend-09-Template/blob/main/Week_14/1.jpg)
+
 ### 1.3 Attribute vs Property
 Attribute:
 ```
@@ -119,7 +120,7 @@ myComponent.a = 'value';
 - Config
   - ✔ Config 在组件中是一个一次性生效的东西，它只会在我们组件构造的时候触发。所以它是不可更改的。也是因为它的不可更改性，所以我们通常会把 config 留给全局。通常每个页面都会有一份 config，然后拿着这个在页面内去使用。
 ### 1.6 组件生命周期 Lifecycle
-![avatar](./2.jpg)
+![avatar](https://github.com/PH-C/Frontend-09-Template/blob/main/Week_14/2.jpg)
 
 ### 1.7 Children
 ``` html
