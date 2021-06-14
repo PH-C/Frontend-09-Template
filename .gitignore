@@ -5,3 +5,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 /Week_10/node_modules
+/Week_14/jsx-component/node_modules
+/Week_15/jsx-component/node_modules
