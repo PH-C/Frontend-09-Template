@@ -56,6 +56,7 @@ export class Timeline {
   reset() {
     this.pause();
     this.state = 'Inited';
+    let startTime = Date.now();
     this[PAUSE_TIME] = 0;
     this[PAUSE_START] = 0;
     this[ANIMATIONS] = new Set();
@@ -85,13 +86,13 @@ export class Animation {
     this.startValue = startValue;
     this.endValue = endValue;
     this.duration = duration;
-    this.timingFunction = timingFunction || ((v) => v);
+    this.timingFunction = timingFunction || (v => v);
     this.delay = delay;
-    this.template = template || ((v) => v);
+    this.template = template || (v => v);
   }
 
   run(time) {
-    console.log(time);
+    // console.log(time);
     let range = this.endValue - this.startValue;
     let progress = this.timingFunction(time / this.duration);
     this.object[this.property] = this.template(

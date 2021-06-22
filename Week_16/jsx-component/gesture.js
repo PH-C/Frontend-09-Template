@@ -1,15 +1,13 @@
 // let element = document.documentElement;
 
-
-
 // let handler;
 // let startX, startY;
 // let isPan = false,
 //   isPress = false,
 //   isTap = false;
 export class Dispatcher {
-  constructor(element){
-    this.element = element
+  constructor(element) {
+    this.element = element;
   }
   dispatch(type, properties) {
     let event = new Event(type);
@@ -24,8 +22,8 @@ export class Dispatcher {
 
 // new Listener(new Recognizer(dispatch))
 
-export class Listener{
-  constructor(element, recognizer){
+export class Listener {
+  constructor(element, recognizer) {
     let contexts = new Map();
     let isListeningMouse = false;
 
@@ -111,11 +109,11 @@ export class Listener{
   }
 }
 
-export class Recognize{
-  constructor(dispatcher){
-    this.dispatcher = dispatcher
+export class Recognize {
+  constructor(dispatcher) {
+    this.dispatcher = dispatcher;
   }
-  
+
   start(point, context) {
     // console.log('start', point.clientX, point.clientY);
 
@@ -124,7 +122,7 @@ export class Recognize{
     this.dispatcher.dispatch("start", {
       clientX: point.clientX,
       clientY: point.clientY,
-    })
+    });
 
     context.points = [
       {
@@ -134,16 +132,23 @@ export class Recognize{
       },
     ];
 
+    context.startTime = Date.now();
     context.isPan = false;
     context.isTap = true;
     context.isPress = false;
+    context.isFlick = false;
 
     context.handler = setTimeout(() => {
       context.isPan = false;
       context.isTap = false;
       context.isPress = true;
+
       // console.log("presss ");
-      this.dispatcher.dispatch("press", {})
+      this.dispatcher.dispatch("press", {
+        startTime: context.startTime,
+        clientX: point.clientX,
+        clientY: point.clientY,
+      });
       context.handler = null;
     }, 500);
   }
@@ -157,29 +162,35 @@ export class Recognize{
       context.isPan = true;
       context.isTap = false;
       context.isPress = false;
+      context.handler = null;
       context.isVertical = Math.abs(dx) < Math.abs(dy);
       // console.log("pan-start");
       this.dispatcher.dispatch("panstart", {
+        startTime: context.startTime,
         startX: context.startX,
         startY: context.startY,
         clientX: point.clientX,
         clientY: point.clientY,
-        isVertical: context.isVertical
-      })
+        isVertical: context.isVertical,
+      });
       clearTimeout(context.handler);
     }
     if (context.isPan) {
       this.dispatcher.dispatch("pan", {
+        startTime: context.startTime,
         startX: context.startX,
         startY: context.startY,
         clientX: point.clientX,
         clientY: point.clientY,
-      })
+        isVertical: context.isVertical,
+      });
       console.log(dx, dy);
       // console.log("pan");
     }
 
-    context.points = context.points.filter((point) => Date.now() - point.t < 500);
+    context.points = context.points.filter(
+      (point) => Date.now() - point.t < 500
+    );
 
     context.points.push({
       t: Date.now(),
@@ -191,6 +202,8 @@ export class Recognize{
   }
 
   end(point, context) {
+    clearTimeout(context.handler);
+
     context.isFlick = false;
 
     if (context.isTap) {
@@ -199,66 +212,76 @@ export class Recognize{
       clearTimeout(context.handler);
     }
     if (context.isPress) {
-      this.dispatcher.dispatch("pressend", {})
+      this.dispatcher.dispatch("pressend", {
+        duration: Date.now() - context.startTime,
+      });
       // console.log("press-end");
     }
-    if (context.isPan) {
-      
-      context.points = context.points.filter(
-        (point) => Date.now() - point.t < 500
+
+    context.points = context.points.filter(
+      (point) => Date.now() - point.t < 500
+    );
+
+    let d, v;
+    if (!context.points.length) {
+      v = 0;
+    } else {
+      d = Math.sqrt(
+        (point.clientX - context.points[0].x) ** 2 +
+          (point.clientY - context.points[0].y) ** 2
       );
-
-      let d, v;
-      if (!context.points.length) {
-        v = 0;
-      } else {
-        d = Math.sqrt(
-          (point.clientX - context.points[0].x) ** 2 +
-            (point.clientY - context.points[0].y) ** 2
-        );
-        v = d / (Date.now() - context.points[0].t);
-      }
-
-      if (v > 1.5) {
-        context.isFlick = true;
-        // console.log("flick");
-        this.dispatcher.dispatch("flick", {
-          startX: context.startX,
-          startY: context.startY,
-          clientX: point.clientX,
-          clientY: point.clientY,
-          isVertical: context.isVertical,
-          isFlick: context.isFlick,
-          velocity: v
-        })
-      } else {
-        context.isFlick = false;
-        // dispatch("panend", {});
-        this.dispatcher.dispatch("panend", {
-          startX: context.startX,
-          startY: context.startY,
-          clientX: point.clientX,
-          clientY: point.clientY,
-          isVertical: context.isVertical,
-          isFlick: context.isFlick
-        })
-      }
-
-      // console.log("pan-end");
+      v = d / (Date.now() - context.points[0].t);
     }
 
-   
+    if (v > 1.5) {
+      context.isFlick = true;
+      // console.log("flick");
+      this.dispatcher.dispatch("flick", {
+        startX: context.startX,
+        startY: context.startY,
+        clientX: point.clientX,
+        clientY: point.clientY,
+        isVertical: context.isVertical,
+        isFlick: context.isFlick,
+        velocity: v,
+      });
+    } else {
+      context.isFlick = false;
+    }
+
+    if (context.isPan) {
+      this.dispatcher.dispatch("panend", {
+        startX: context.startX,
+        startY: context.startY,
+        clientX: point.clientX,
+        clientY: point.clientY,
+        isVertical: context.isVertical,
+        isFlick: context.isFlick,
+        velocity: v,
+      });
+    }
+
+    this.dispatcher.dispatch("end", {
+      startX: context.startX,
+      startY: context.startY,
+      clientX: point.clientX,
+      clientY: point.clientY,
+      isVertical: context.isVertical,
+      isFlick: context.isFlick,
+      velocity: v,
+    });
+
+    // console.log("pan-end");
     // console.log('end', point.clientX, point.clientY);
   }
 
   cancel(point, context) {
     clearTimeout(context.handler);
-    this.dispatcher.dispatch("cancel", {})
+    this.dispatcher.dispatch("cancel", {});
     // console.log('cancel', point.clientX, point.clientY);
   }
 }
 
-
-export function enableGesture(element){
-  new Listener(element, new Recognize(new Dispatcher(element)))
+export function enableGesture(element) {
+  return new Listener(element, new Recognize(new Dispatcher(element)));
 }
