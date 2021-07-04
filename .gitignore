@@ -8,3 +8,10 @@ yarn-error.log*
 /Week_14/jsx-component/node_modules
 /Week_15/jsx-component/node_modules
 /Week_16/jsx-component/node_modules
+/Week_17/generator-toolchain/node_modules
+/Week_17/generator-vue/node_modules
+/Week_17/vue-demo/node_modules
+/Week_18/myvueapp/node_modules
+/Week_18/test-demo/node_modules
+/Week_18/generator-toytool/node_modules
+/Week_18/generator-toytool/node_modules

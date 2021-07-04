@@ -1,0 +1,22 @@
+{
+  "name": "generator-toytool",
+  "version": "1.0.0",
+  "description": "学习笔记",
+  "main": "generators/app/index.js",
+  "files": [
+    "generators"
+  ],
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "yeoman-generator": "^5.3.0",
+    "react": "^16.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.15.0",
+    "lodash": "^4.17.21"
+  }
+}

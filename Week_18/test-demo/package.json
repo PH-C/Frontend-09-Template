@@ -1,0 +1,25 @@
+{
+  "name": "test-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --require @babel/register",
+    "coverage": "nyc npm run test"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
+    "@babel/register": "^7.14.5",
+    "babel-plugin-istanbul": "^6.0.0",
+    "css": "^3.0.0",
+    "mocha": "^9.0.2",
+    "nyc": "^15.1.0"
+  },
+  "dependencies": {
+    "@istanbuljs/nyc-config-babel": "^3.0.0"
+  }
+}
