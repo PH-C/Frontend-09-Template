@@ -1,6 +1,7 @@
 let http = require('http');
-let fs = require('fs');
+// let fs = require('fs');
 let archiver = require('archiver');
+let child_process = require("child_process")
 
 // fs.stat("./sample.html", (err, states) => {
   let request = http.request({
