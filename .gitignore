@@ -15,3 +15,6 @@ yarn-error.log*
 /Week_18/test-demo/node_modules
 /Week_18/generator-toytool/node_modules
 /Week_18/generator-toytool/node_modules
+/Week_19/publish-server/node_modules
+/Week_19/publish-tool/node_modules
+/Week_19/server/node_modules
